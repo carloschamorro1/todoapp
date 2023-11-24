@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './labs.component.css'
 })
 export class LabsComponent {
-  welcome = 'Ni idea';
+  welcome = 'Bienvenido';
   tasks = [
     'Instalar angular CLI',
     'Crear componentes',
@@ -18,4 +18,30 @@ export class LabsComponent {
   ];
   name = 'Carlos';
   age = 24;
+  disabled = true;
+  img = 'https://w3schools.com/howto/img_avatar.png'
+
+  person = {
+    name: 'Nicolas',
+    age: 19,
+    avatar: 'https://w3schools.com/howto/img_avatar.png'
+  }
+
+  clickHandler(){
+    alert('Hola')
+  }
+
+  doubleClickHandler(){
+    alert('Hola doble click')
+  }
+
+  changeHandler(event: Event){
+    console.log(event);
+  }
+
+  keyDownHandler(event: KeyboardEvent){
+    const input = event.target as HTMLInputElement;
+    console.log(input.value)
+  }
+
 }
