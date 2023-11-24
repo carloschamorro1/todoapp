@@ -1,30 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-labs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './labs.component.html',
   styleUrl: './labs.component.css'
 })
 export class LabsComponent {
   welcome = 'Bienvenido';
-  tasks = [
+  tasks = signal([
     'Instalar angular CLI',
     'Crear componentes',
     'Crear proyecto',
     'Crear servicio'
-  ];
-  name = 'Carlos';
+  ]);
+  name = signal('Carlos');
   age = 24;
   disabled = true;
   img = 'https://w3schools.com/howto/img_avatar.png'
 
-  person = {
-    name: 'Nicolas',
+  person = signal ({
+    name: 'Carlos',
     age: 19,
     avatar: 'https://w3schools.com/howto/img_avatar.png'
+  });
+
+  colorCtrl = new FormControl();
+
+  constructor(){
+    this.colorCtrl.valueChanges.subscribe(value => {
+      console.log(value)
+    })  
   }
 
   clickHandler(){
@@ -36,12 +46,36 @@ export class LabsComponent {
   }
 
   changeHandler(event: Event){
-    console.log(event);
+    const input = event.target as HTMLInputElement;
+    const newValue = input.value;
+    this.name.set(newValue)
   }
 
   keyDownHandler(event: KeyboardEvent){
     const input = event.target as HTMLInputElement;
     console.log(input.value)
+  }
+
+  changeAge(event: Event){
+    const input = event.target as HTMLInputElement;
+    const newValue = input.value;
+    this.person.update(prevState => {
+      return{
+        ...prevState,
+        age: parseInt(newValue, 10)
+      }
+    });
+  }
+
+  changeName(event: Event){
+    const input = event.target as HTMLInputElement;
+    const newValue = input.value;
+    this.person.update(prevState => {
+      return{
+        ...prevState,
+        name:newValue
+      }
+    });
   }
 
 }
