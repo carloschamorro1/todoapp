@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal, effect, inject, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -12,24 +12,44 @@ import { Task } from './../../models/task.model'
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  tasks = signal<Task[]>([
-    {
-      id: Date.now(),
-      title: 'Crear proyecto',
-      completed: false
-    },
-    {
-      id: Date.now(),
-      title: 'Crear componente',
-      completed: false
+  tasks = signal<Task[]>([]);
+  filter = signal<'all'| 'completed' | 'pending'>('all');
+  tasksByFilter = computed(() => {
+    const filter = this.filter();
+    const tasks = this.tasks();
+    if(filter === 'pending'){
+      return tasks.filter(task => !task.completed)
     }
-  ]);
-
+    if(filter === 'completed'){
+      return tasks.filter(task => task.completed)
+    }
+    return tasks;
+  });
+    
   newTaskCtrl = new FormControl('',{
     nonNullable: true,
     validators: [
       Validators.required]
   });
+
+  injector = inject(Injector)
+
+  ngOnInit(){
+    const storage = localStorage.getItem('tasks');
+    if(storage){
+      const tasks = JSON.parse(storage);
+      this.tasks.set(tasks);
+    }
+    this.trackTasks();
+  }
+
+  trackTasks(){
+    effect(() => {
+      const tasks = this.tasks();
+      console.log(tasks);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }, { injector: this.injector });
+  }
 
   changehandler(){
     if(this.newTaskCtrl.valid){
@@ -65,6 +85,43 @@ export class HomeComponent {
         return task;
       })
     })
+  }
+
+  updateTaskEditingMode(index: number){
+    this.tasks.update((prevState) => {
+      return prevState.map((task, position) => {
+        if(position === index){
+          return{
+            ...task, 
+            editing: true
+          }
+        }
+        return {
+          ...task,
+          editing: false
+        }
+      })
+    })
+  }
+
+  updateTaskText(index: number, event: Event){
+    const input = event.target as HTMLInputElement;  
+    this.tasks.update((prevState) => {
+      return prevState.map((task, position) => {
+        if(position === index){
+          return{
+            ...task, 
+            title: input.value,
+            editing: false
+          }
+        }
+        return task;
+      })
+    })
+  }
+
+  changeFilter(filter: 'all'| 'completed' | 'pending'){
+    this.filter.set(filter);
   }
 
 }

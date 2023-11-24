@@ -49,15 +49,31 @@
         My content
     </div>
     <div *ngIf="name() === 'Carlos'">
-        My content 2
+        Soy Carlos
     </div>
+
+    @if (name() === 'Carlos') {
+        <div>
+            Soy Carlos 2
+        </div>
+    }
+
     <input type="number" [value]="person().age" (change)="changeAge($event)">
+
     <div *ngIf="person().name === 'Carlos' && person().age >= 18; else elseBlock">
         Soy carlos tengo 18 o soy mayor de 18 y ya puedo ir al bote D:
     </div>
     <ng-template #elseBlock>
         Soy carlos y soy menor de 18 no voy al bote :D
     </ng-template>
+
+    <h2>If else new</h2>
+    @if (person().name === 'Carlos' && person().age >= 18) {
+        <div>
+            Soy carlos tengo 18 o soy mayor de 18 y ya puedo ir al bote D:
+        </div>
+    }
+
     <hr />
 
     <input type="text" [value]="person().name" (change)="changeName($event)">
@@ -73,4 +89,23 @@
     <hr />
     <input type="color" [formControl] = "colorCtrl">
     <p>color: {{colorCtrl.value }}</p>
+    <svg>
+        <g>
+            <rect x="0" y="0" height ="100" width="100" [attr.fill]="colorCtrl.value"/>
+
+        </g>
+    </svg>
+    <hr />
+    <input type="number" [formControl]="widthCtrl">
+    <span class="box" [style.width.px]="widthCtrl.value"></span>
+
+    <hr />
+    <p>
+        <input type="text" [formControl]="nameCtrl"><br />
+        <span class="message-error" [class.show]="nameCtrl.invalid && nameCtrl.touched">Nombre invalido</span>
+    </p>
+    <p>
+        <input type="text">
+    </p>
+
 </div>
