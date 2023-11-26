@@ -13,6 +13,7 @@ import { Task } from './../../models/task.model'
 })
 export class HomeComponent {
   tasks = signal<Task[]>([]);
+  date = signal(new Date());
   filter = signal<'all'| 'completed' | 'pending'>('all');
   tasksByFilter = computed(() => {
     const filter = this.filter();
@@ -85,6 +86,10 @@ export class HomeComponent {
         return task;
       })
     })
+  }
+
+  clearCompleted(){
+    this.tasks.update((tasks) => tasks.filter(task => !task.completed));
   }
 
   updateTaskEditingMode(index: number){

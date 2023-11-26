@@ -1,7 +1,8 @@
 <section class="todoapp">
   <header class="header">
     <div class="container">
-      <h1>My Day</h1>
+      <h1>My Day, today is: {{date().toLocaleDateString('es-HN')}}</h1>
+      <h1></h1>
       <p>All my tasks in one place</p>
       <input
         class="new-todo"
@@ -104,7 +105,7 @@
         </li>
       </ul>
       <!-- Hidden if no completed items are left ↓ -->
-      <button class="clear-completed">Clear completed</button>
+      <button class="clear-completed" (click)="clearCompleted()">Clear completed</button>
     </footer>
     }
   </div>
